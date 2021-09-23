@@ -24,18 +24,50 @@ namespace pet_hotel.Controllers
         [HttpGet]
         public IEnumerable<Pet> GetPets() {
             return _context.Pets 
-                .Include(PetOwner => PetOwner.OwnedBy);
+                .Include(PetOwner => PetOwner.PetOwner);
         }
 
         [HttpGet("{id}")]
         public Pet GetById(int id) {
             return _context.Pets
-                .Include(PetOwner => PetOwner.OwnedBy)
+                .Include(PetOwner => PetOwner.PetOwner)
                 .SingleOrDefault(Pet => Pet.Id == id);
         }
 
+        [HttpPost]
+        public Pet Post(Pet pet) {
+            _context.Add(pet);
+            _context.SaveChanges();
 
+            return pet;
+        }
 
+        //  public Bread Put(int id, Bread bread) {
+
+        // [HttpPut("{id}")]
+        // public Pet Put(int id) {
+        //     Pet pet = _context.Pets.Find(id);
+        //     //if (pet == null) return NotFound();
+        //     _context.Pets.Update(pet);
+        //     _context.SaveChanges();
+            //return Ok(pet);
+        
+            // PetInventory pet = _context.PetInventory.Find(id);
+            // if (pet == null) return NotFound();
+            // if (pet.inventory <= 0) return BadRequest(new { error = "Cant reduce inventory below zero" });
+            // pet.sell();
+            // _context.Update(pet);
+            // _context.SaveChanges();
+            // return Ok(pet);
+        //}
+
+        [HttpDelete("{id}")]
+        public void Delete(int id) {
+            Pet pet = _context.Pets.Find(id);
+
+            _context.Pets.Remove(pet);
+            _context.SaveChanges();
+        }
         // [HttpGet]
         // [Route("test")]
         // public IEnumerable<Pet> GetPets() {
@@ -59,5 +91,7 @@ namespace pet_hotel.Controllers
 
         //     return new List<Pet>{ newPet1, newPet2};
         // }
+
+
     }
 }

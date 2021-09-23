@@ -26,7 +26,7 @@ namespace dotnet_bakery.Migrations
                         .HasColumnType("integer")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
-                    b.Property<DateTime>("CheckedInAt")
+                    b.Property<DateTime?>("CheckedInAt")
                         .HasColumnType("timestamp without time zone");
 
                     b.Property<string>("Name")
@@ -42,6 +42,8 @@ namespace dotnet_bakery.Migrations
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("PetOwnerId");
 
                     b.ToTable("Pets");
                 });
@@ -64,6 +66,17 @@ namespace dotnet_bakery.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("PetOwners");
+                });
+
+            modelBuilder.Entity("pet_hotel.Pet", b =>
+                {
+                    b.HasOne("pet_hotel.PetOwner", "PetOwner")
+                        .WithMany()
+                        .HasForeignKey("PetOwnerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("PetOwner");
                 });
 #pragma warning restore 612, 618
         }
